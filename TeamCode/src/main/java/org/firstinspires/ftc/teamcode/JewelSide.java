@@ -56,4 +56,15 @@ public class JewelSide {
         }
 
         if(redNum < minNum  && blueNum > minNum){//testing to see if only the blue jewel has been detected
-            return false;/
+            return false;// this code will only run when the pictograph is detected so if only the blue jewel is detected it is on the left
+        }else if(blueNum < minNum && redNum > minNum){//testing to see i only the red jewel has been detected
+            return true;// this code will only run when the pictograph is detected so if only the red jewel is detected it is on the left
+        }
+
+        if(redTotalX/redNum > blueTotalX/blueNum){//the further to the right something is in the picture the higher its x value it is so if the avg x value of all red pixels in the image is higher than the avg blue values then the red ball is on the right.            this tests what side the blue jewel is on
+            return false;//returns false based on the test above ^^
+        }else{
+            return true;//returns true based on the test above ^^
+        }    }
+
+}
