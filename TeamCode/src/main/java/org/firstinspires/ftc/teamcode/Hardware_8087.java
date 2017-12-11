@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -13,11 +14,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Hardware_8087 {
 
     /* Public OpMode members */
-    public DcMotor Lefty1 = null;
-    public DcMotor Lefty2 = null;
+    public DcMotor Lefty1;
+    public DcMotor Lefty2;
 
-    public DcMotor Righty1 = null;
-    public DcMotor Righty2 = null;
+    public DcMotor Righty1;
+    public DcMotor Righty2;
+
+    public DcMotor Test;
+
+
+    public DcMotor slide1;
+    public DcMotor slide2;
+
+    public Servo raise1;
+    public Servo raise2;
 
     public ColorSensor Color;
     
@@ -38,7 +48,16 @@ public class Hardware_8087 {
         Righty1 = hwMap.get(DcMotor.class, "Righty1");
         Righty2 = hwMap.get(DcMotor.class, "Righty2");
 
-        //Color = hwMap.get(ColorSensor.class, "color");
+        Test = hwMap.get(DcMotor.class, "test");
+
+        raise1 = hwMap.get(Servo.class, "raise1");
+        raise2 = hwMap.get(Servo.class, "raise2");
+
+       slide2 = hwMap.get(DcMotor.class, "intake2");
+       slide1 = hwMap.get(DcMotor.class, "intake1");
+
+
+    //Color = hwMap.get(ColorSensor.class, "color");
 
         //Set motor powers to zero
         Lefty1.setPower(0);
@@ -46,15 +65,17 @@ public class Hardware_8087 {
 
         Righty1.setPower(0);
         Righty2.setPower(0);
-
         Lefty1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Lefty2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         Righty1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Righty2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        Righty1.setDirection(DcMotorSimple.Direction.REVERSE);
-        Righty2.setDirection(DcMotorSimple.Direction.REVERSE);
+        Lefty1.setDirection(DcMotorSimple.Direction.REVERSE);
+        Lefty2.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        Righty1.setDirection(DcMotorSimple.Direction.FORWARD);
+        Righty2.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
     /***

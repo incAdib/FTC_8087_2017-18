@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  */
 
 @TeleOp(name = "Tele 8087", group = "8087")
-//@Disabled
+@Disabled
 public class Tele_8087 extends OpMode {
 
     /* Declare OpMode members */
@@ -48,6 +48,31 @@ public class Tele_8087 extends OpMode {
         robot.Lefty2.setPower(left);
         robot.Righty1.setPower(right);
         robot.Righty2.setPower(right);
+
+        if (gamepad1.a){
+            robot.slide1.setPower(1.0);
+        } else if (gamepad1.b) {
+            robot.slide1.setPower(0);
+        }
+
+        if (gamepad1.x){
+            robot.raise1.setPosition(1);
+            robot.raise2.setPosition(0);
+        } else if (gamepad1.y){
+            robot.raise1.setPosition(0);
+            robot.raise2.setPosition(1);
+        }
+
+        if (gamepad1.left_bumper){
+            robot.slide1.setPower(1);
+            robot.slide2.setPower(1);
+        } else if (gamepad1.right_bumper){
+            robot.slide1.setPower(-1);
+            robot.slide2.setPower(-1);
+        } else {
+            robot.slide1.setPower(0);
+            robot.slide2.setPower(0);
+        }
     }
 
     /* Code to run once when the driver hits STOP */
