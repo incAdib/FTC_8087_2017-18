@@ -9,12 +9,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  */
 
 @TeleOp (name = "Mecanum Drive", group = "Tele Test ")
-//@Disabled
+@Disabled
 public class Mecanum_Drive_Math extends OpMode {
 
-    Hardware_333 robot = new Hardware_333();
+    Hardware_8088 robot = new Hardware_8088();
 
     private final double DRIVE_SPEED = 1.0;
+    private final double MAX_POSITION = 0.9;
+    private final double MIN_POSITION = 0.2;
+    private final double GLYPHER_SPEED = 0.8;
 
     /* code to run once the driver hits INIT */
     @Override
@@ -53,6 +56,32 @@ public class Mecanum_Drive_Math extends OpMode {
         robot.Righty1.setPower(v2);
         robot.Lefty2.setPower(v3);
         robot.Righty2.setPower(v4);
+
+        telemetry.addData("Left Front Motor Power: ", v1);
+        telemetry.addData("Left Rear  Motor Power: ", v2);
+        telemetry.addData("Right Front Motor Power: ", v3);
+        telemetry.addData("Right Rear  Motor Power: ", v4);
+        telemetry.update();
+
+        if (gamepad1.a){
+            robot.GlyphGrabber1.setPosition(MAX_POSITION);
+        } else if (gamepad1.b){
+            robot.GlyphGrabber1.setPosition(MIN_POSITION);
+        }
+
+        if (gamepad1.x){
+            robot.GlyphPusher.setPosition(1);
+        } else if (gamepad1.y){
+            robot.GlyphPusher.setPosition(0);
+        }
+
+        if (gamepad1.left_bumper){
+            robot.Glypher.setPower(-GLYPHER_SPEED);
+        } else if (gamepad1.right_bumper){
+            robot.Glypher.setPower(GLYPHER_SPEED);
+        } else {
+            robot.Glypher.setPower(0);
+        }
     }
 
     /* Code to run once when the driver hits STOP */

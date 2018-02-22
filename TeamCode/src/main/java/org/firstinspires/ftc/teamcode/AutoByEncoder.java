@@ -22,7 +22,7 @@ public class AutoByEncoder extends LinearOpMode {
 
     static final double COUNTS_PER_MOTOR_REV  = 1120;
     static final double DRIVE_GEAR_REDUCTION  = 2.0;
-    static final double WHEEL_DIAMETER_INCHES = 4;
+    static final double WHEEL_DIAMETER_INCHES = 4.0;
     static final double COUNTS_PER_INCH       = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION)/
                                                 (WHEEL_DIAMETER_INCHES * 3.1415);
     @Override
@@ -39,7 +39,11 @@ public class AutoByEncoder extends LinearOpMode {
         robot.Lefty2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.Righty1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.Righty2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        idle();
+
+        robot.Lefty1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.Lefty2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.Righty1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.Righty2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //send massage stating successful encoder reset
         telemetry.addData("Path 0:", "Starting @ %7d :%7d",
@@ -50,9 +54,10 @@ public class AutoByEncoder extends LinearOpMode {
         //wait for START button to be pushed
         waitForStart();
 
-        encoderDrive(DRIVE_SPEED, 48, 48, 5.0);  //1: Drive forwards 47" with a 5 sec timeout
-        encoderDrive(TURN_SPEED, 12, -12, 4.0);  //2: Turn right 4" with a 4 sec timeout
-        encoderDrive(DRIVE_SPEED, -24, -24, 4.0);//3: Reverse 24" with a 4 sec timeout
+        //drive by these three commands
+        encoderDrive(DRIVE_SPEED, 48, 48, 2.0);  //1: Drive forwards 47" with a 2 sec timeout
+        encoderDrive(TURN_SPEED, 12, -12, 1.0);  //2: Turn right 4" with a 1 sec timeout
+        encoderDrive(DRIVE_SPEED, -24, -24, 2.0);//3: Reverse 24" with a 2 sec timeout
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -61,19 +66,27 @@ public class AutoByEncoder extends LinearOpMode {
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS){
-        int newLeftTarget1;
-        int newLeftTarget2;
-        int newRightTarget1;
-        int newRightTarget2;
+        int newLeftTarget;
+        int newRightTarget;
 
         //Ensure the OpMode is still active
         if(opModeIsActive()){
 
             //determine new target position, and pass to motor controller
-            newLeftTarget1 = robot.Lefty1.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newLeftTarget2 = robot.Lefty2.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget1 = robot.Righty1.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newRightTarget2 = robot.Righty2.getTargetPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newLeftTarget = robot.Lefty1.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newLeftTarget = robot.Lefty2.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newRightTarget = robot.Righty1.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newRightTarget = robot.Righty2.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+
+            robot.Lefty1.setPower(newLeftTarget);
+            robot.Lefty2.setPower(newLeftTarget);
+            robot.Righty1.setPower(newRightTarget);
+            robot.Righty2.setPower(newRightTarget);
+
+            robot.Lefty1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.Lefty2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.Righty1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.Righty2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             //reset the timeout time and start motion
             runtime.reset();
@@ -88,7 +101,7 @@ public class AutoByEncoder extends LinearOpMode {
                     (robot.Lefty1.isBusy() && robot.Lefty2.isBusy() &&
                      robot.Righty1.isBusy() && robot.Righty2.isBusy())){
                 //display it to the driver
-                telemetry.addData("Path 1", "Running to %7d", newLeftTarget1, newLeftTarget2, newRightTarget1, newRightTarget2);
+                telemetry.addData("Path 1", "Running to %7d", newLeftTarget, newRightTarget);
                 telemetry.addData("Path 2", "Running to %7d",
                                              robot.Lefty1.getCurrentPosition(),
                                              robot.Lefty2.getCurrentPosition(),
@@ -103,7 +116,13 @@ public class AutoByEncoder extends LinearOpMode {
             robot.Righty1.setPower(0);
             robot.Righty2.setPower(0);
 
-            sleep(250);
+            robot.Lefty1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.Lefty2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.Righty1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.Righty2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            //pause after each move
+            //sleep(250);
         }
     }
 }

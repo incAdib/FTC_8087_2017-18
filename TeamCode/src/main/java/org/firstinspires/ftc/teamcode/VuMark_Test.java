@@ -68,14 +68,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 @Autonomous(name="VuMark Id", group ="Auto Tests")
-//@Disabled
+@Disabled
 public class VuMark_Test extends LinearOpMode {
 
     public static final String TAG = "Vuforia VuMark Sample";
 
     OpenGLMatrix lastLocation = null;
 
-    Hardware_333 brobot = new Hardware_333();
+    Hardware_8088 brobot = new Hardware_8088();
     private ElapsedTime runtime = new ElapsedTime();
 
     static final double DRIVE_SPEED = 0.8;
@@ -151,18 +151,7 @@ public class VuMark_Test extends LinearOpMode {
                  * loop until this condition occurs, then move on to act accordingly depending
                  * on which VuMark was visible. */
                 telemetry.addData("VuMark", "%s visible...", vuMark);
-                if (vuMark == RelicRecoveryVuMark.CENTER){
-                    telemetry.addData("Robot","Kill yourself...");
-                    telemetry.update();
-                    //driveForwards();
-                } else if (vuMark == RelicRecoveryVuMark.LEFT){
-                    telemetry.addData("Robot","Go jump off a bridge...");
-                    telemetry.update();
-                } else if (vuMark == RelicRecoveryVuMark.RIGHT){
-                    telemetry.addData("Robot", "Burn in hell...");
-                } else {
-                    telemetry.addData("Robot","Go idle yourself...");
-                }
+                driveForwards();
 
                 /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
                  * it is perhaps unlikely that you will actually need to act on this pose information, but
@@ -190,7 +179,6 @@ public class VuMark_Test extends LinearOpMode {
             else {
                 telemetry.addData("VuMark", "not visible");
             }
-
             telemetry.update();
         }
     }
@@ -201,11 +189,7 @@ public class VuMark_Test extends LinearOpMode {
         brobot.Lefty2.setPower(DRIVE_SPEED);
         brobot.Righty1.setPower(DRIVE_SPEED);
         brobot.Righty2.setPower(DRIVE_SPEED);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 3.0)) {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
+        sleep(1000);
     }
 
     String format(OpenGLMatrix transformationMatrix) {

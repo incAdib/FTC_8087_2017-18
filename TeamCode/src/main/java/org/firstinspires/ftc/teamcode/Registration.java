@@ -10,6 +10,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 public class Registration  {
 
     @OpModeRegistrar
-    public static void registerMyOpModes (OpModeManager manager) {
+    public static void registerMyOpModes (OpModeManager manager){
     }
 }

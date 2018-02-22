@@ -35,7 +35,7 @@ public class Auto_8087_Red extends LinearOpMode {
         waitForStart();
 
         //Step1 : Drive forwards for 3 seconds
-        driveForwards();
+        driveBackwards();
         while (opModeIsActive() && (runtime.seconds() < 2.5)){
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();

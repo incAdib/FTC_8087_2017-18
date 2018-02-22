@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.motors.NeveRest60Gearmotor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -20,17 +21,16 @@ public class Hardware_8087 {
     public DcMotor Righty1;
     public DcMotor Righty2;
 
-    public DcMotor Test;
-
-
     public DcMotor slide1;
     public DcMotor slide2;
 
-    public Servo raise1;
-    public Servo raise2;
+    public DcMotor intake;
+
+    public Servo mastServo1;
+    public Servo mastServo2;
+    public Servo JewelKnocker;
 
     public ColorSensor Color;
-    
 
     /* Local OpMode members */
     HardwareMap hwMap = null;
@@ -48,23 +48,24 @@ public class Hardware_8087 {
         Righty1 = hwMap.get(DcMotor.class, "Righty1");
         Righty2 = hwMap.get(DcMotor.class, "Righty2");
 
-        Test = hwMap.get(DcMotor.class, "test");
+        mastServo1 = hwMap.get(Servo.class, "raise1");
+        mastServo2 = hwMap.get(Servo.class, "raise2");
+        JewelKnocker = hwMap.get(Servo.class, "knocker");
 
-        raise1 = hwMap.get(Servo.class, "raise1");
-        raise2 = hwMap.get(Servo.class, "raise2");
+        slide2 = hwMap.get(DcMotor.class, "slide2");
+        slide1 = hwMap.get(DcMotor.class, "slide1");
 
-       slide2 = hwMap.get(DcMotor.class, "intake2");
-       slide1 = hwMap.get(DcMotor.class, "intake1");
+        intake = hwMap.get(DcMotor.class, "intake");
 
 
-    //Color = hwMap.get(ColorSensor.class, "color");
+        //Color = hwMap.get(ColorSensor.class, "color");
 
-        //Set motor powers to zero
+        //Set drive train motor powers to zero
         Lefty1.setPower(0);
         Lefty2.setPower(0);
-
         Righty1.setPower(0);
         Righty2.setPower(0);
+
         Lefty1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Lefty2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 

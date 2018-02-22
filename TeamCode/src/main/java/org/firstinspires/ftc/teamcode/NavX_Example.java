@@ -43,17 +43,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-/*
- * This is an example LinearOpMode that shows how to use Kauai Labs navX Micro Robotics Navigation
- * Sensor. It assumes that the sensor is configured with a name of "navx".
- *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
-@Autonomous(name = "Sensor: KL navX Micro", group = "Auto Tests")
-//@Disabled
+@Autonomous(name = "NavX Micro Test", group = "Auto Tests")
+@Disabled
 public class NavX_Example extends LinearOpMode {
-
     /** In this sample, for illustration purposes we use two interfaces on the one gyro object.
      * That's likely atypical: you'll probably use one or the other in any given situation,
      * depending on what you're trying to do. {@link IntegratingGyroscope} (and it's base interface,
@@ -61,26 +53,30 @@ public class NavX_Example extends LinearOpMode {
      * implementations. {@link NavxMicroNavigationSensor}, by contrast, provides functionality that
      * is unique to the navX Micro sensor.
      */
-    IntegratingGyroscope gyro;
-    NavxMicroNavigationSensor navxMicro;
 
+    private final double TARGET_ANGLE_DEGREES   = 90.0;
+    private final double TOLERANCE_DEGREES      = 2.0;
+    private final double MIN_MOTOR_OUTPUT_VALUE = -1.0;
+    private final double MAX_MOTOR_OUTPUT_VALUE = 1.0;
+    private final double YAW_PID_P = 0.005;
+    private final double YAW_PID_I = 0.0;
+    private final double YAW_PID_D = 0.0;
+
+    Hardware_8088 brobot;
     // A timer helps provide feedback while calibration is taking place
     ElapsedTime timer = new ElapsedTime();
 
-    @Override public void runOpMode() throws InterruptedException {
-        // Get a reference to a Modern Robotics GyroSensor object. We use several interfaces
-        // on this object to illustrate which interfaces support which functionality.
-        navxMicro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
-        gyro = (IntegratingGyroscope)navxMicro;
-        // If you're only interested int the IntegratingGyroscope interface, the following will suffice.
-        // gyro = hardwareMap.get(IntegratingGyroscope.class, "navx");
+    public NavX_Example() {
+        brobot = new Hardware_8088();
+    }
 
+    @Override public void runOpMode() throws InterruptedException {
         // The gyro automatically starts calibrating. This takes a few seconds.
         telemetry.log().add("Gyro Calibrating. Do Not Move!");
 
         // Wait until the gyro calibration is complete
         timer.reset();
-        while (navxMicro.isCalibrating())  {
+        while (brobot.nav.isCalibrating())  {
             telemetry.addData("calibrating", "%s", Math.round(timer.seconds())%2==0 ? "|.." : "..|");
             telemetry.update();
             Thread.sleep(50);
@@ -97,18 +93,17 @@ public class NavX_Example extends LinearOpMode {
             // Read dimensionalized data from the gyro. This gyro can report angular velocities
             // about all three axes. Additionally, it internally integrates the Z axis to
             // be able to report an absolute angular Z orientation.
-            AngularVelocity rates = gyro.getAngularVelocity(AngleUnit.DEGREES);
-            Orientation angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            AngularVelocity rates = brobot.nav.getAngularVelocity(AngleUnit.DEGREES);
+            Orientation angles = brobot.nav.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
             telemetry.addLine()
-                .addData("dx", formatRate(rates.xRotationRate))
-                .addData("dy", formatRate(rates.yRotationRate))
-                .addData("dz", "%s deg/s", formatRate(rates.zRotationRate));
-
+                    .addData("dx", formatRate(rates.xRotationRate))
+                    .addData("dy", formatRate(rates.yRotationRate))
+                    .addData("dz", "%s deg/s", formatRate(rates.zRotationRate));
             telemetry.addLine()
-                .addData("heading", formatAngle(angles.angleUnit, angles.firstAngle))
-                .addData("roll", formatAngle(angles.angleUnit, angles.secondAngle))
-                .addData("pitch", "%s deg", formatAngle(angles.angleUnit, angles.thirdAngle));
+                    .addData("heading", formatAngle(angles.angleUnit, angles.firstAngle))
+                    .addData("roll", formatAngle(angles.angleUnit, angles.secondAngle))
+                    .addData("pitch", "%s deg", formatAngle(angles.angleUnit, angles.thirdAngle));
             telemetry.update();
 
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
